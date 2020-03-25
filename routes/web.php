@@ -12,14 +12,5 @@
 */
 
 Route::get('/', function () {
-    return view('main-page');
-})->name('main-page');
-
-Route::get('/news', function () {
-    return view('news');
-})->name('news');
-
-Route::get('/day-article', function () {
-    return view('article');
-})->name('article');
-
+    return view('welcome');
+});
