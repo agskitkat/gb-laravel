@@ -17,12 +17,14 @@ Route::get('/', function () {
 })->name('main-page');
 
 // Страница авторизации )))
+// Не подключаю бд, так как ещё не прошли.
 Auth::routes();
 
-// Страница добавлени новости
-//
-Route::group(['prefix' => 'personal', 'before' => 'auth'], function() {
-
+// Наверное будет middelware отвечать за админа?
+Route::group(['prefix' => 'admin', 'before' => 'auth'], function() {
+    // Страница добавлени новости
+    Route::get('article/add', 'AdminArticelController@add')
+        ->name('admin.article.add');
 });
 
 Route::group(['prefix' => 'news'], function() {
