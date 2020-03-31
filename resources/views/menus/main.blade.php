@@ -5,8 +5,12 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
             <a class="nav-item nav-link active" href="{{route('main-page')}}">Главная страница</a>
-            <a class="nav-item nav-link" href="{{route('news')}}">Все новости</a>
-            <a class="nav-item nav-link" href="{{route('article')}}">Новость дня</a>
+            <a class="nav-item nav-link" href="{{route('categories')}}">Все категории</a>
+
+            @foreach(\App\Category::getCaterorys() as $category)
+                <a class="nav-item nav-link" href="{{route('category', [$category['alias']])}}">{{ $category['name'] }}</a>
+            @endforeach
+
         </div>
     </div>
 </nav>
