@@ -25,18 +25,13 @@ class NewsController extends Controller
     function category($full_path) {
         $caterorys = Category::getCaterorys();
         $arPath = explode('/', $full_path);
-        //
-        //print_r($arPath);
 
         for($i = 0; count($arPath) > $i; $i++) {
             $path = $arPath[$i];
 
             foreach ($caterorys as &$category) {
-                //echo $category['alias'] ." - ". $path. PHP_EOL;
 
                 if($category['alias'] === $path) {
-
-                    //echo count($arPath)-1 ."-". $i. PHP_EOL;
 
                     if(count($arPath)-1 === $i) {
 
@@ -48,7 +43,6 @@ class NewsController extends Controller
 
                     }
 
-                    //echo "DOWN ". PHP_EOL;
                     if(isset($category['child'])) {
                         $caterorys = $category['child'];
 
@@ -66,7 +60,7 @@ class NewsController extends Controller
      * Новость
      */
     function news($id) {
-        $article = News::getArticelById($id);
+        $article = News::find($id);
 
         if(!$article) {
             return abort(404);
