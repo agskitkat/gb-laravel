@@ -12,8 +12,10 @@
 */
 
 // Страницу приветствия.
+use App\Category;
+
 Route::get('/', function () {
-    return view('main-page');
+    return view('main-page', [ 'menu' => Category::getCaterorys()]);
 })->name('main-page');
 
 // Страница авторизации )))
@@ -22,9 +24,15 @@ Auth::routes();
 
 // Наверное будет middelware отвечать за админа?
 Route::group(['prefix' => 'admin', 'before' => 'auth'], function() {
-    // Страница добавлени новости
-    Route::get('article/add', 'AdminArticelController@add')
-        ->name('admin.article.add');
+
+    // Страница добавлени или редактирования новости
+    Route::get('article/edit/{id?}', 'AdminArticelController@edit')
+        ->where('id','[0-9]+')
+        ->name('admin.article.edit');
+
+    // Метод сохранения новости
+    Route::post('article/save/', 'AdminArticelController@save')
+        ->name('admin.article.save');
 });
 
 Route::group(['prefix' => 'news'], function() {

@@ -30,3 +30,16 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+
+/**
+ * Add ck-editor
+ */
+window.ClassicEditor = require( '@ckeditor/ckeditor5-build-classic');
+ClassicEditor
+    .create( document.querySelector( '#ckeditor' ) )
+    .then( editor => {
+        console.log( editor );
+    } )
+    .catch( error => {
+        console.error( error );
+    } );

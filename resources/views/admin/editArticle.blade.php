@@ -1,25 +1,41 @@
 @extends('layouts.layout')
 
 @section('content')
-    <h1>Новая новость:</h1>
-    <form>
+    @if($article->id)
+        <h1>Редактирование новости: {{ $article->name }}</h1>
+    @else
+        <h1>Новая новость:</h1>
+    @endif
+    <form action="{{ route('admin.article.save') }}" method="post">
+
+        @csrf
+
         <div class="form-group">
             <label>Заголовок</label>
-            <input name="title" type="text" class="form-control">
+            <input name="name" type="text" class="form-control" value="{{ $article->name }}">
         </div>
+
         <div class="form-group">
             <label>Категория</label>
-            <select name="categories" multiple class="form-control">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+            <select name="categories[]" multiple class="form-control">
+                <option value="0">Без категории</option>
+                @foreach($categoriesList as $category) {
+                    <option value="{{ $category->id }}" @if($category->is_use) selected @endif>{{ $category->name }}</option>
+                }
+                @endforeach
             </select>
         </div>
+
         <div class="form-group">
             <label>Текст новости</label>
-            <textarea name="text" class="form-control" rows="10"></textarea>
+            <textarea id="ckeditor" name="text" class="form-control" rows="10">{{ $article->text }}</textarea>
         </div>
+
+        @if($article->id)
+                <input type="hidden" name="id" value="{{ $article->id }}">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            @else
+                <button type="submit" class="btn btn-success">Добавить новость</button>
+        @endif
     </form>
 @endsection
