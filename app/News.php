@@ -38,8 +38,8 @@ class News extends Model
         // Эдакий условный join
         $selected_news = [];
         foreach ($cn as $cn_item) {
-            if($cn_item->category_id === $category->id) {
-                $selected_news[] = $cn_item->news_id;
+            if(+$cn_item->category_id === +$category->id) {
+                $selected_news[] = +$cn_item->news_id;
             }
         }
 
@@ -169,8 +169,8 @@ class News extends Model
             foreach($ids as $id) {
                 $cn_updeted[] = [
                     "id" => ++$max_id,
-                    "category_id" => $id,
-                    "news_id" => $this->id
+                    "category_id" => +$id,
+                    "news_id" => +$this->id
                 ];
             }
         }
