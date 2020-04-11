@@ -13,8 +13,10 @@ class NewsController extends Controller
      * Список категорий, с поддержкой вложенности
      */
     function categories() {
+        $caterories = Category::getCaterorys();
         return view('news.caterorys', [
-            'caterorys' =>  Category::getCaterorys(),
+            'caterorys' => $caterories,
+            'menu' => $caterories,
         ]);
     }
 
@@ -38,7 +40,8 @@ class NewsController extends Controller
                         return view('news.category', [
                             'category' => $category,
                             'parent_path' => $full_path,
-                            'news' =>  News::getNewsByCategory($category['alias'])
+                            'news' =>  News::getNewsByCategory($category['alias']),
+                            'menu' => Category::getCaterorys(),
                         ]);
 
                     }
@@ -67,7 +70,8 @@ class NewsController extends Controller
         }
 
         return view('news.news', [
-            'article' => $article
+            'article' => $article,
+            'menu' => Category::getCaterorys(),
         ]);
     }
 }

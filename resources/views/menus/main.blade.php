@@ -6,11 +6,26 @@
 
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link active" href="{{route('main-page')}}">Главная страница</a>
-            <a class="nav-item nav-link" href="{{route('categories')}}">Все категории</a>
 
-            @foreach(\App\Category::getCaterorys() as $category)
-                <a class="nav-item nav-link" href="{{route('category', [$category['alias']])}}">{{ $category['name'] }}</a>
-            @endforeach
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                   id="navbarDropdownCategories"
+                   role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true"
+                   aria-expanded="false">
+                    Категории
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownCategories">
+                    <a class="dropdown-item" href="{{ route('categories') }}">Все категории</a>
+                    @if(isset($menu))
+                        @foreach($menu as $category)
+                            <a class="dropdown-item" href="{{route('category', [$category['alias']])}}">{{ $category['name'] }}</a>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
 
         </div>
 
@@ -29,7 +44,7 @@
                     Профиль
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ route('admin.article.add') }}">Добавить статью</a>
+                    <a class="dropdown-item" href="{{ route('admin.article.edit') }}">Добавить статью</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
