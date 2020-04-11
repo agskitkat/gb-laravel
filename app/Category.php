@@ -17,18 +17,16 @@ class Category extends Model
     static function getCaterorys() {
 
         // Миграция на файл
-        if(!Storage::disk('local')->exists(self::$filename)) {
+        /*if(!Storage::disk('local')->exists(self::$filename)) {
             // БД
             $result = DB::table('categories')->get();
             Storage::disk('local')->put(self::$filename, json_encode($result,JSON_UNESCAPED_UNICODE) );
-        }
+        }*/
 
         // Использование файла как бд
-        $result = json_decode( Storage::disk('local')->get(self::$filename) );
+        //$result = json_decode( Storage::disk('local')->get(self::$filename) );
 
-
-        // JsonFile
-        //$result =
+        $result = DB::table('categories')->get();
 
         // Немного удобства, но можно и без него.
         $dataset = [];
@@ -51,7 +49,7 @@ class Category extends Model
 
     static function getCategoryByAlias($alias) {
         // Использование файла как бд
-        $categories = json_decode( Storage::disk('local')->get(self::$filename) );
+        /*$categories = json_decode( Storage::disk('local')->get(self::$filename) );
 
         // Поиск по фалу
         foreach($categories as &$category) {
@@ -60,13 +58,13 @@ class Category extends Model
                 return $category;
             }
         }
-        return [];
+        return [];*/
 
         // Возврат к бд
-        /*
+
         return DB::table('categories')
             ->where('alias', $alias)
             ->first();
-        */
+
     }
 }

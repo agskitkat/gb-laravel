@@ -6,7 +6,7 @@
     @else
         <h1>Новая новость:</h1>
     @endif
-    <form action="{{ route('admin.article.save') }}" method="post">
+    <form enctype="multipart/form-data" action="{{ route('admin.article.save') }}" method="post">
 
         @csrf
 
@@ -24,6 +24,15 @@
                 }
                 @endforeach
             </select>
+        </div>
+
+        @if($article->image)
+            <div class="image" style="background-image: url({{  $article->image }})"></div>
+        @endif
+
+        <div class="form-group">
+            <label>Картинка</label>
+            <input name="image" type="file" class="form-control-file">
         </div>
 
         <div class="form-group">

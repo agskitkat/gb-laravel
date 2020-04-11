@@ -6,6 +6,7 @@ use App\Category;
 use Illuminate\Http\Request;
 use App\News;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AdminArticelController extends Controller
 {
@@ -44,9 +45,14 @@ class AdminArticelController extends Controller
             $article = new News();
         }
 
+        if($request->file('image')) {
+            $path = $request->file('image')->store('public/image');
+            $article->image = Storage::url($path);
+        }
 
         $article->name = $request->name;
         $article->text = $request->text;
+        $article->alias = Str::slug($request->name);
         $article->save();
 
         //обновляем связи категорий и новостей
