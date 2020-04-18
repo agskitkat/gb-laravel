@@ -27,6 +27,7 @@ class News extends Migration
             $table->bigIncrements('id');
             $table->string('name')->comment('Название новости');
             $table->string('alias')->unique()->comment('Алиас новости');
+            $table->string('image')->nullable()->comment('Картинка новости');
             $table->text('text')->comment('Текст новости');
             $table->timestamps();
         });
