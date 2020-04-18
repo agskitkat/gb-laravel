@@ -18,6 +18,7 @@
                 @component('news.newsComponent', ["article" => $article])
                 @endcomponent
             @endforeach
+            {{ $news->render() }}
     @else
         <div class="news__empty center">
             Нет новостей

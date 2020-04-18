@@ -1,12 +1,16 @@
 @extends('layouts.layout')
 
 @section('content')
-    @if($article->id)
+    @if(isset($article->id))
         <h1>Редактирование новости: {{ $article->name }}</h1>
     @else
         <h1>Новая новость:</h1>
     @endif
-    <form enctype="multipart/form-data" action="{{ route('admin.article.save') }}" method="post">
+    <form
+        enctype="multipart/form-data"
+        action="{{ route('articles.update', [$article->id?:0]) }}"
+        method="POST">
+        <input type="hidden" name="_method" value="PUT">
 
         @csrf
 
