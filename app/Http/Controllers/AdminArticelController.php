@@ -56,7 +56,7 @@ class AdminArticelController extends Controller
         }
 
         // Валидация
-        $this->validate($request, News::rules());
+        $this->validate($request, News::rules(), [], News::rulesNames());
 
         $article->fill($request->all());
         $article->alias = Str::slug($request->name);

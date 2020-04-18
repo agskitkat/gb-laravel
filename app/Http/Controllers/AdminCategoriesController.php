@@ -48,9 +48,11 @@ class AdminCategoriesController extends Controller
         }
 
         // Валидация
-        $this->validate($request, Category::rules());
+        $this->validate($request, Category::rules($category), [], Category::rulesNames() );
 
         $category->fill($request->all())->save();
+
+        Session::flash('message', 'Изменения сохранены !');
 
         return view('admin.categories.edit', [
             'category'       =>     $category,

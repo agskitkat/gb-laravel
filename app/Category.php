@@ -114,4 +114,13 @@ class Category extends Model
             'parent_id' =>  "in:".implode(',',$allowerIds),
         ];
     }
+
+
+    static function rulesNames() {
+        return [
+            'name'          => 'Название категории',
+            'alias'          => 'Алиас категории',
+            'parent_id'      => 'Родительская категория'
+        ];
+    }
 }
