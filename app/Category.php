@@ -11,21 +11,15 @@ class Category extends Model
     protected $table = 'categories';
     public static $filename = 'categories.json';
 
+    protected $fillable = [
+        'name',
+        'alias',
+        'parent_id'
+    ];
 
     // Расходуем ОЗУ...
     // Стриом иерархический массив категорий
     static function getCaterorys() {
-
-        // Миграция на файл
-        /*if(!Storage::disk('local')->exists(self::$filename)) {
-            // БД
-            $result = DB::table('categories')->get();
-            Storage::disk('local')->put(self::$filename, json_encode($result,JSON_UNESCAPED_UNICODE) );
-        }*/
-
-        // Использование файла как бд
-        //$result = json_decode( Storage::disk('local')->get(self::$filename) );
-
         $result = DB::table('categories')->get();
 
         // Немного удобства, но можно и без него.
@@ -48,23 +42,62 @@ class Category extends Model
     }
 
     static function getCategoryByAlias($alias) {
-        // Использование файла как бд
-        /*$categories = json_decode( Storage::disk('local')->get(self::$filename) );
-
-        // Поиск по фалу
-        foreach($categories as &$category) {
-            if($category->alias === $alias) {
-                //dd($category);
-                return $category;
-            }
-        }
-        return [];*/
-
-        // Возврат к бд
-
         return DB::table('categories')
             ->where('alias', $alias)
             ->first();
-
     }
+
+    static function getAllowedCategory($category) {
+        $id = 0;
+
+        if(isset($category->id)) {
+            $id = $category->id;
+        }
+
+        $categories = Category::getCaterorys();
+
+        $list = [];
+        foreach($categories as $section) {
+            $list = array_merge(
+                $list,
+                self::getSectionRecursion(
+                    $section,
+                    $id
+                )
+            );
+        }
+        return $list;
+    }
+
+    static function getSectionRecursion(&$section, &$excludeId = 0, $depth = 0) {
+        $result = [];
+
+        if(!$section || $section['id'] === $excludeId) {
+            return [];
+        }
+
+        $result[] = [
+            'id'    =>  $section['id'],
+            'name'  =>  str_repeat('- ', $depth) . $section['name'],
+            'alias' =>  $section['alias']
+        ];
+
+        if(isset($section['child'])) {
+            $depth++;
+            foreach ($section['child'] as $childSection) {
+                $result = array_merge (
+                    $result,
+                    self::getSectionRecursion(
+                        $childSection,
+                        $excludeId,
+                        $depth
+                    )
+                );
+            }
+        }
+
+        return $result;
+    }
+
+
 }

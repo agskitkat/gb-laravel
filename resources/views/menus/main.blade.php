@@ -44,7 +44,8 @@
                     Профиль
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ route('admin.article.edit') }}">Добавить статью</a>
+                    <a class="dropdown-item" href="{{ route('articles.index') }}">Статьи</a>
+                    <a class="dropdown-item" href="{{ route('categories.index') }}">Категории</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">

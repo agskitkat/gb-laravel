@@ -25,14 +25,17 @@ Auth::routes();
 // Наверное будет middelware отвечать за админа?
 Route::group(['prefix' => 'admin', 'before' => 'auth'], function() {
 
-    // Страница добавлени или редактирования новости
-    Route::get('article/edit/{id?}', 'AdminArticelController@edit')
-        ->where('id','[0-9]+')
-        ->name('admin.article.edit');
-
-    // Метод сохранения новости
-    Route::post('article/save/', 'AdminArticelController@save')
-        ->name('admin.article.save');
+    /*
+    GET           /articles                 index       articles.index
+    GET           /articles/create          create      articles.create
+    POST          /articles                 store       articles.store
+    GET           /articles/{news}          show        articles.show
+    GET           /articles/{news}/edit     edit        articles.edit
+    PUT|PATCH     /articles/{news}          update      articles.update
+    DELETE        /articles/{news}          destroy     articles.destroy
+    */
+    Route::resource('articles', 'AdminArticelController');
+    Route::resource('categories', 'AdminCategoriesController');
 });
 
 Route::group(['prefix' => 'news'], function() {

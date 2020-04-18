@@ -19,81 +19,22 @@ class News extends Seeder
         $sections = [];
 
         // Категории
-        $sections[] = DB::table('categories')->insertGetId([
-            'name' => "Политика",
-            'alias' => 'policy',
-            'parent_id' => null,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
 
-        $sections[] = DB::table('categories')->insertGetId([
-            'name' => "Россия",
-            'alias' => 'russia',
-            'parent_id' => $sections[0],
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        /*
+         * Категории надо было сеять отдельным фалом, и через массив с данными,
+         * и не последовательно вызывая insert, ну что за дублирование то.
+         * Нам не платят за число строк!
+        */
 
-        $sections[] = DB::table('categories')->insertGetId([
-            'name' => "Сша",
-            'alias' => 'usa',
-            'parent_id' => $sections[0],
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        $sections[] =  DB::table('categories')->insertGetId([
-            'name' => "Европа",
-            'alias' => 'europe',
-            'parent_id' => $sections[0],
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        $sections[] = DB::table('categories')->insertGetId([
-            'name' => "Франция",
-            'alias' => 'france',
-            'parent_id' => $sections[3],
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        $sections[] =  DB::table('categories')->insertGetId([
-            'name' => "Германия",
-            'alias' => 'germany',
-            'parent_id' => $sections[3],
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        $sections[] =  DB::table('categories')->insertGetId([
-            'name' => "Технологии",
-            'alias' => 'hitech',
-            'parent_id' => null,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-        $sections[] =  DB::table('categories')->insertGetId([
-            'name' => "Компьютеры",
-            'alias' => 'pc',
-            'parent_id' => $sections[6],
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-        $sections[] = DB::table('categories')->insertGetId([
-            'name' => "Смартфоны",
-            'alias' => 'mobile',
-            'parent_id' => $sections[6],
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        $sections[] =  DB::table('categories')->insertGetId([
-            'name' => "Экология",
-            'alias' => 'ecology',
-            'parent_id' => null,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-
+        $sections = DB::table('categories')->get();
         // Новости
-        for($i = 0; $i < 10; $i++) {
+        for($i = 0; $i < 100; $i++) {
             $w = $faker->word();
+            $w_2 = $faker->word();
+            $w_3 = $faker->word();
 
             $image = null;
-            // https://lorempixel.com/ - bad (
+            // https://lorempixel.com/ - не отвечает (
             /*
             $fimage =  $faker->imageUrl(500, 150);
             $contents = file_get_contents($fimage);
@@ -102,10 +43,9 @@ class News extends Seeder
             $image = Storage::url($path);
             */
 
-
             $news_id = DB::table('news')->insertGetId([
-                'name' => $w,
-                'alias' => Str::slug($w),
+                'name' => $w . " ". $w_2 . " ".$w_3,
+                'alias' => Str::slug($w . " ". $w_2 . " ".$w_3) . "_" . $i,
                 'image' => $image,
                 'text' => $faker->text(rand(200, 400)),
                 'created_at' => date('Y-m-d H:i:s')
