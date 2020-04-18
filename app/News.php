@@ -9,6 +9,13 @@ class News extends Model
 {
     protected $table = 'news';
 
+    protected $fillable = [
+        'name',
+        'text',
+        'alias',
+        'image'
+    ];
+
     // все новости категории
     static function getNewsByCategory($alias) {
         $category = Category::getCategoryByAlias($alias);
@@ -20,11 +27,8 @@ class News extends Model
             ->where('cn.category_id', '=', $category->id)
             ->paginate(env('PAGINATION', 10));
 
-
         return $news;
     }
-
-
 
     // Список категорий статьи с флагом принодлежности
     function getCategorisSelectedList() {
@@ -37,6 +41,11 @@ class News extends Model
          * SELECT COUNT(*) FROM category_news cn WHERE cn.news_id = '.$id.' AND cn.category_id = c.id
          * И даже излишен, вполне достаточно только по id новости доставать запись,
          *  зачем еще и по категории то? Лишняя нагрузка на БД.
+         *
+         * В данном случае, я пытаюсь получить список всех категорий с
+         * флагом о принодлжности конкретной записи к конкретной категории
+         * через промежуточную таблицу.
+         * Как это сделать по ID новости я так понять и не смог (
          */
         return DB::table('categories as c')
             ->selectRaw('c.id id, c.name, (
@@ -46,12 +55,8 @@ class News extends Model
 
     }
 
-
-
     function updateCategories(Array $ids = []) {
-
         DB::beginTransaction();
-
         try {
 
             DB::table('category_news')
@@ -68,7 +73,8 @@ class News extends Model
 
                  * Уже не вникая сразу могу сказать что так не нужно, запросы в цикле зло,
                  * и лучше одним запросом сделать или пересмотреть логику работы.
-                 */
+
+                // Было
                 foreach ($ids as $id) {
                     DB::table('category_news')
                         ->updateOrInsert(
@@ -76,6 +82,17 @@ class News extends Model
                             ['category_id' => $id, 'news_id' => $this->id]
                         );
                 }
+                */
+
+                // Стало
+                $insert = [];
+                foreach ($ids as $id) {
+                    $insert[] = [
+                        'category_id' => $id,
+                        'news_id' => $this->id
+                    ];
+                }
+                DB::table('category_news')->insert($insert);
             }
 
             DB::commit();

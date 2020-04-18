@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 
 class AdminArticelController extends Controller
 {
+
     function index() {
         $list = News::query()->paginate(env('PAGINATION', 10));
 
