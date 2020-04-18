@@ -10,7 +10,7 @@
     @guest
 
     @else
-        <a href="{{ route('admin.article.edit', [$article->id]) }}">Редактировать новость</a>
+        <a href="{{ route('articles.edit', [$article->id]) }}">Редактировать новость</a>
     @endguest
 
 </article>

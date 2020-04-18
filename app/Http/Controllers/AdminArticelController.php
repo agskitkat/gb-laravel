@@ -5,37 +5,47 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 use App\News;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AdminArticelController extends Controller
 {
-    //
-    function edit($id = false) {
 
-        if($id) {
-            $article = News::find($id);
+    function index() {
+        $list = News::query()->paginate(env('PAGINATION', 10));
 
-            if(!$article) {
-                return abort(404);
-            }
+        return view('admin.articles.list', [
+            'list' => $list
+        ]);
+    }
 
-        } else {
-            $article = new News();
-        }
+    function create() {
+        $article = new News();
+        return $this->edit($article);
+    }
 
-        return view('admin.editArticle', [
+    function edit(News $article) {
+
+       if(!empty(Input::old())) {
+           $article->fill(Input::old());
+           $article->categories = Input::old('categories');
+       }
+
+        return view('admin.articles.editArticle', [
             'article' => $article,
             'categoriesList' => $article->getCategorisSelectedList(),
             'menu' => Category::getCaterorys()
         ]);
     }
 
+    function show(News $article) {
+        return $this->edit($article);
+    }
 
-    function save(Request $request) {
-
-        //dd($request->categories);
-
+    function update(Request $request) {
+        // Новая запись или нет ?
         if($request->id) {
             $article = News::find($request->id);
             if(!$article) {
@@ -45,21 +55,29 @@ class AdminArticelController extends Controller
             $article = new News();
         }
 
-        if($request->file('image')) {
+        // Валидация
+        $this->validate($request, News::rules(), [], News::rulesNames());
+
+        $article->fill($request->all());
+        $article->alias = Str::slug($request->name);
+        if ($request->file('image')) {
             $path = $request->file('image')->store('public/image');
             $article->image = Storage::url($path);
         }
-
-        $article->name = $request->name;
-        $article->text = $request->text;
-        $article->alias = Str::slug($request->name);
         $article->save();
 
         //обновляем связи категорий и новостей
         $article->updateCategories($request->categories);
 
+        Session::flash('message', 'Изменения сохранены !');
 
-       return redirect()->route('admin.article.edit', [$article->id]);
+        return $this->edit($article);
+    }
+
+    function destroy(News $article) {
+        $article->delete();
+        Session::flash('message', 'Статья удалена');
+        return redirect()->route('articles.index');
     }
 
 }
