@@ -2,7 +2,7 @@
 @section('content')
     <h1>Список статей</h1>
     <p>
-        <a class="btn btn-primary"
+        <a class="btn btn-primary dusk-add-article"
            href="{{ route('articles.create') }}">
             Добавить статью
         </a>
