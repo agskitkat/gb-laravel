@@ -16,6 +16,8 @@ class News extends Model
         'image'
     ];
 
+    public $categories = [];
+
     // все новости категории
     static function getNewsByCategory($alias) {
         $category = Category::getCategoryByAlias($alias);
@@ -101,5 +103,25 @@ class News extends Model
             DB::rollBack();
         }
 
+    }
+
+    static function rules() {
+        $newsTableName = (new News())->getTable();
+        $categoryTableName = (new Category())->getTable();
+        return [
+            'name'      =>  'required|min:3|max:255',
+            'text'      =>  'required|min:100',
+            'alias'     =>  "unique:$newsTableName,alias",
+            'categories' => "required|array",
+            'categories.*' => "required|string|distinct|exists:$categoryTableName,id",
+        ];
+    }
+
+    static function rulesNames() {
+        return [
+            'name'          => 'Заголовок',
+            'text'          => 'Текст новости',
+            'categories'    => 'Категория'
+        ];
     }
 }

@@ -47,7 +47,7 @@ class Category extends Model
             ->first();
     }
 
-    static function getAllowedCategory($category) {
+    static function getAllowedCategory($category = false) {
         $id = 0;
 
         if(isset($category->id)) {
@@ -99,5 +99,19 @@ class Category extends Model
         return $result;
     }
 
+    static function rules(&$category = false) {
+        $categoryTableName = (new Category())->getTable();
+        $allowedCategory = self::getAllowedCategory($category);
 
+        $allowerIds = [0]; // Верхняя категория разршена !!!
+        foreach($allowedCategory as &$cat) {
+            $allowerIds[] =  $cat['id'];
+        }
+
+        return [
+            'name'      =>  'required|min:3|max:255',
+            'alias'     =>  "min:3|max:255", // Не успеваю, тут проверку на уникальность
+            'parent_id' =>  "in:".implode(',',$allowerIds),
+        ];
+    }
 }

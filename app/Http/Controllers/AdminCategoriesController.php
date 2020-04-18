@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 
 class AdminCategoriesController extends Controller
@@ -17,18 +18,21 @@ class AdminCategoriesController extends Controller
         ]);
     }
 
+    function show(Category $category) {
+        return $this->edit($category);
+    }
+
     function create() {
         $category = new Category();
-        $categories = Category::getAllowedCategory($category);
-
-        return view('admin.categories.edit', [
-            'category'          =>  $category,
-            'categoriesList'    =>  $categories,
-            'menu'              =>  Category::getCaterorys()
-        ]);
+        return $this->edit($category);
     }
 
     function edit(Category $category) {
+
+        if(!empty(Input::old())) {
+            $category->fill(Input::old());
+        }
+
         return view('admin.categories.edit', [
             'category'       =>     $category,
             'categoriesList' =>     Category::getAllowedCategory($category),
@@ -42,6 +46,9 @@ class AdminCategoriesController extends Controller
         } else {
             $category = new Category();
         }
+
+        // Валидация
+        $this->validate($request, Category::rules());
 
         $category->fill($request->all())->save();
 

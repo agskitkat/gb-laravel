@@ -17,23 +17,26 @@
 
         <div class="form-group">
             <label>Название категории</label>
-            <input name="name" type="text" class="form-control" value="{{ $category->name }}">
+            <input name="name" type="text" class="form-control @if($errors->has('name')) is-invalid @endif" value="{{ $category->name }}">
+            @component('admin.input-errors', ["fieldname" => 'name'])@endcomponent
         </div>
 
         <div class="form-group">
             <label>Алиас категории</label>
-            <input name="alias" type="text" class="form-control" value="{{ $category->alias }}">
+            <input name="alias" type="text" class="form-control  @if($errors->has('alias')) is-invalid @endif" value="{{ $category->alias }}">
+            @component('admin.input-errors', ["fieldname" => 'alias'])@endcomponent
         </div>
 
         <div class="form-group">
             <label>Родительская категория</label>
-            <select name="parent_id" class="form-control">
+            <select name="parent_id" class="form-control @if($errors->has('parent_id')) is-invalid @endif">
                 <option value="0">Верхняя категория</option>
                 @foreach($categoriesList as $cat) {
                     <option value="{{ $cat['id'] }}" @if( $category->parent_id === $cat['id'] ) selected @endif>{{ $cat['name'] }}</option>
                 }
                 @endforeach
             </select>
+            @component('admin.input-errors', ["fieldname" => 'parent_id'])@endcomponent
         </div>
 
         @if(isset($category->id))
